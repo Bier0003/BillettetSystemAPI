@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35828.75
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BillettetSystemAPI", "BillettetSystemAPI\BillettetSystemAPI.csproj", "{5FAF2E1F-5BA9-4B0E-A720-AD1E73D4703C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelBilletterSystem", "ModelBilletterSystem\ModelBilletterSystem.csproj", "{01381106-1EA6-4F2B-AC48-4ED40BFCE362}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5FAF2E1F-5BA9-4B0E-A720-AD1E73D4703C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FAF2E1F-5BA9-4B0E-A720-AD1E73D4703C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FAF2E1F-5BA9-4B0E-A720-AD1E73D4703C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FAF2E1F-5BA9-4B0E-A720-AD1E73D4703C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01381106-1EA6-4F2B-AC48-4ED40BFCE362}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01381106-1EA6-4F2B-AC48-4ED40BFCE362}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01381106-1EA6-4F2B-AC48-4ED40BFCE362}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01381106-1EA6-4F2B-AC48-4ED40BFCE362}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5EBE38C3-7AB9-49EF-84B5-AF1BC3BB8505}
+	EndGlobalSection
+EndGlobal

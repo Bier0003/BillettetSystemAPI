@@ -1,0 +1,6 @@
+@BillettetSystemAPI_HostAddress = http://localhost:5017
+
+GET {{BillettetSystemAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
