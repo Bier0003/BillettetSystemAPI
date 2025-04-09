@@ -1,15 +1,29 @@
+using BillettetSystemAPI.Interfaces;
+using Microsoft.EntityFrameworkCore;
+
+
+// Ensure the ModelsLibrary assembly is referenced in the project
+
+using BillettetSystemAPI.Repositories;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Register ApplicationDbContext from the Model project
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));  // Modify as per your connection string
 
+// Register repositories that use ApplicationDbContext
+builder.Services.AddScoped<IEvent, EventRepository>();
+builder.Services.AddScoped<ITicket, TicketRepository>();
+builder.Services.AddScoped<ICategory, CategoryRepository>();
+
+// Add Controllers, Swagger, etc.
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -17,9 +31,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

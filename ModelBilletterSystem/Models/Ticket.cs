@@ -1,23 +1,22 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
-namespace ModelBilletterSystem.Models
+namespace ModelBilletterSystem
 {
     public class Ticket
     {
+    
         [Key]
-        public int Id_Ticket { get; set; }
-        public int Ticket_Amount { get; set; }
-        public int Ticket_Price { get; set; }
-        public bool Ability { get; set; }
-        public bool is_used { get; set; }
-
+        public Guid Id_Ticket { get; set; } = Guid.NewGuid();
+        public decimal Ticket_Price { get; set; }
+        public bool is_used { get; set; } = false;
         [ForeignKey("Id_event")]
         public int EventId { get; set; }
-
         [JsonIgnore]
-        public virtual Event?  Events { get; set; }
+        [Required]
+        public virtual Event Event { get; set; }
       
 
     }

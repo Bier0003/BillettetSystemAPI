@@ -1,17 +1,14 @@
-﻿using ModelBilletterSystem.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
+﻿using ModelBilletterSystem;
 namespace BillettetSystemAPI.Interfaces
 
 {
     public interface ITicket
     {
         Task<List<Ticket>> GetAllTickets();
-        Task<Ticket> GetTicketById(int id);
-        Task<Ticket> CreateTicket(int ticket_amount, int ticket_price, bool ability, bool is_used, int eventId);
-        Task<Ticket> UpdateTicket(int id, int ticket_amount, int ticket_price, bool ability, bool is_used, int eventId);
-        Task<bool> RemoveTicket(int id);
-
+        Task<Ticket> GetTicketById(Guid Id_ticket);
+        Task<Ticket> CreateTicket(decimal ticket_price, bool is_used, int eventId);
+        Task<Ticket> UpdateTicket(Guid Id_ticket, decimal ticket_price, bool is_used, int eventId);
+        Task<bool> RemoveTicket(Guid Id_ticket);
+        Task BuyTicket(decimal ticket_Price,bool is_used);
     }
 }

@@ -11,20 +11,20 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ModelBilletterSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250320074014_Initial")]
-    partial class Initial
+    [Migration("20250409065543_ChangeDecimalDatatype")]
+    partial class ChangeDecimalDatatype
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.3")
+                .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("ModelBilletterSystem.Models.Category", b =>
+            modelBuilder.Entity("ModelBilletterSystem.Category", b =>
                 {
                     b.Property<int>("Id_Category")
                         .ValueGeneratedOnAdd()
@@ -38,10 +38,10 @@ namespace ModelBilletterSystem.Migrations
 
                     b.HasKey("Id_Category");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Category");
                 });
 
-            modelBuilder.Entity("ModelBilletterSystem.Models.Event", b =>
+            modelBuilder.Entity("ModelBilletterSystem.Event", b =>
                 {
                     b.Property<int>("Id_event")
                         .ValueGeneratedOnAdd()
@@ -49,88 +49,77 @@ namespace ModelBilletterSystem.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id_event"));
 
-                    b.Property<string>("Event_Description")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
 
-                    b.Property<DateTime>("Event_Time")
+                    b.Property<DateTime>("Create_At")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<string>("Event_Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Event_Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("categoryId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id_event");
-
-                    b.HasIndex("categoryId");
-
-                    b.ToTable("Events");
-                });
-
-            modelBuilder.Entity("ModelBilletterSystem.Models.Ticket", b =>
-                {
-                    b.Property<int>("Id_Ticket")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id_Ticket"));
-
-                    b.Property<bool>("Ability")
-                        .HasColumnType("bit");
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Ticket_Amount")
                         .HasColumnType("int");
 
-                    b.Property<int>("Ticket_Price")
+                    b.HasKey("Id_event");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("Events");
+                });
+
+            modelBuilder.Entity("ModelBilletterSystem.Ticket", b =>
+                {
+                    b.Property<Guid>("Id_Ticket")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("EventId")
                         .HasColumnType("int");
 
-                    b.Property<int>("eventId")
-                        .HasColumnType("int");
+                    b.Property<decimal>("Ticket_Price")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("is_used")
                         .HasColumnType("bit");
 
                     b.HasKey("Id_Ticket");
 
-                    b.HasIndex("eventId");
+                    b.HasIndex("EventId");
 
                     b.ToTable("Tickets");
                 });
 
-            modelBuilder.Entity("ModelBilletterSystem.Models.Event", b =>
+            modelBuilder.Entity("ModelBilletterSystem.Event", b =>
                 {
-                    b.HasOne("ModelBilletterSystem.Models.Category", "Categories")
-                        .WithMany("Events")
-                        .HasForeignKey("categoryId")
+                    b.HasOne("ModelBilletterSystem.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Categories");
+                    b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("ModelBilletterSystem.Models.Ticket", b =>
+            modelBuilder.Entity("ModelBilletterSystem.Ticket", b =>
                 {
-                    b.HasOne("ModelBilletterSystem.Models.Event", "Events")
-                        .WithMany("Tickets")
-                        .HasForeignKey("eventId")
+                    b.HasOne("ModelBilletterSystem.Event", "Event")
+                        .WithMany()
+                        .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Events");
-                });
-
-            modelBuilder.Entity("ModelBilletterSystem.Models.Category", b =>
-                {
-                    b.Navigation("Events");
-                });
-
-            modelBuilder.Entity("ModelBilletterSystem.Models.Event", b =>
-                {
-                    b.Navigation("Tickets");
+                    b.Navigation("Event");
                 });
 #pragma warning restore 612, 618
         }

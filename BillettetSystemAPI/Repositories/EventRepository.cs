@@ -1,9 +1,8 @@
 ﻿using BillettetSystemAPI.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using ModelBilletterSystem.Models;
-using System.Timers;
+using ModelBilletterSystem;
 
-namespace BillettetSystemAPI.Repositories
+namespace BillettetSystemAPI.Repositories   
 {
     public class EventRepository : IEvent
     {
@@ -13,76 +12,134 @@ namespace BillettetSystemAPI.Repositories
             _context = Context;
         }
 
-        public async Task<Event> CreateEvent(string event_title, string event_description, DateTime create_at, List<int> categoryIds)
+        public async Task<Event> CreateEvent(string Event_Title, string Event_Description, DateTime Create_at, int Ticket_amount, string? Image, int CategoryId)
         {
-            using (var transaction = await _context.Database.BeginTransactionAsync())
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
             {
-                try
+                var category = await _context.Category.FindAsync(CategoryId);
+                if (category == null)
                 {
-                   
-                    var newEvent = new Event
-                    {
-                        Event_Title = event_title,
-                        Event_Description = event_description,
-                        Create_At = create_at,
-                        Categories = new List<Category>()  
-                    };
-
-                  
-                    foreach (var categoryId in categoryIds)
-                    {
-                        var category = await _context.Categories.FindAsync(categoryId);
-                        if (category != null)
-                        {
-                           
-                            category.EventId = newEvent.Id_event;  
-                            newEvent.Categories.Add(category);  
-                        }
-                        else
-                        {
-                         
-                            throw new Exception($"Category with ID {categoryId} not found.");
-                        }
-                    }
-
-                   
-                    _context.Events.Add(newEvent);
-                    await _context.SaveChangesAsync();  
-
-                 
-                    await transaction.CommitAsync();
-
-                    return newEvent;  
+                    throw new Exception($"Category with ID {CategoryId} not found.");
                 }
-                catch (Exception e)
+
+
+                var newEvent = new Event
                 {
-                    await transaction.RollbackAsync();
-                    throw new Exception(e.Message);  
-                }
+                    Event_Title = Event_Title,
+                    Event_Description = Event_Description,
+                    Create_At = Create_at,
+                    CategoryId = CategoryId,
+                    Ticket_Amount = Ticket_amount, 
+                    Category = category
+                };
+
+                _context.Events.Add(newEvent);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return newEvent;
+            }
+            catch (Exception e)
+            {
+                await transaction.RollbackAsync();
+                throw new Exception(e.Message);
             }
         }
 
-
-
         public async Task<List<Event>> GetAllEvents()
         {
-            throw new NotImplementedException();
+            var events = await _context.Events
+                .Include(e => e.Category) 
+                .ToListAsync();
+
+            if (events == null || !events.Any())
+            {
+                throw new Exception("No events found.");
+            }
+
+            return events;
         }
 
-        public async Task<Event> GetEventById(int id)
+        public async Task<Event> GetEventById(int Id_event)
         {
-            throw new NotImplementedException();
+            var eventItem = await _context.Events
+                .Include(e => e.Category)
+                .FirstOrDefaultAsync(e => e.Id_event == Id_event);
+
+            if (eventItem == null)
+            {
+                throw new Exception("Event not found");
+            }
+
+            return eventItem;
         }
 
-        public async Task<bool> RemoveEvent(int id)
+        public async Task<bool> RemoveEvent(int Id_event)
         {
-            throw new NotImplementedException();
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var eventToRemove = await _context.Events
+                    .FirstOrDefaultAsync(e => e.Id_event == Id_event);
+
+                if (eventToRemove == null)
+                {
+                    throw new Exception("Event not found");
+                }
+
+                _context.Events.Remove(eventToRemove);
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return true;
+            }
+            catch (Exception e)
+            {
+                await transaction.RollbackAsync();
+                throw new Exception($"Failed to remove event: {e.Message}");
+            }
         }
 
-
-        public async Task<Event> UpdateEvent(int id, string event_title, string event_description, DateTime create_at, List<int> categoryId)
+        public async Task<Event> UpdateEvent(int Id_Event, string Event_Title, string Event_Description, DateTime Create_at, int Ticket_amount, string? Image, int CategoryId)
         {
-            throw new NotImplementedException();
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var eventToUpdate = await _context.Events
+                    .Include(e => e.Category)
+                    .FirstOrDefaultAsync(e => e.Id_event == Id_Event);
+
+                if (eventToUpdate == null)
+                {
+                    throw new Exception("Event not found");
+                }
+
+                var category = await _context.Category.FindAsync(CategoryId);
+                if (category == null)
+                {
+                    throw new Exception($"Category with ID {CategoryId} not found.");
+                }
+
+                // Update fields
+                eventToUpdate.Event_Title = Event_Title;
+                eventToUpdate.Event_Description = Event_Description;
+                eventToUpdate.Create_At = Create_at;
+                eventToUpdate.CategoryId = CategoryId;
+                eventToUpdate.Ticket_Amount = Ticket_amount; 
+                eventToUpdate.Category = category;
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return eventToUpdate;
+            }
+
+            catch (Exception e)
+            {
+                await transaction.RollbackAsync();
+                throw new Exception(e.Message);
+            }
         }
+
     }
 }

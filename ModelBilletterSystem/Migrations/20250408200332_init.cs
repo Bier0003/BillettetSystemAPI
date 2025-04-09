@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ModelBilletterSystem.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Categories",
+                name: "Category",
                 columns: table => new
                 {
                     Id_Category = table.Column<int>(type: "int", nullable: false)
@@ -21,7 +21,7 @@ namespace ModelBilletterSystem.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Categories", x => x.Id_Category);
+                    table.PrimaryKey("PK_Category", x => x.Id_Category);
                 });
 
             migrationBuilder.CreateTable(
@@ -31,17 +31,18 @@ namespace ModelBilletterSystem.Migrations
                     Id_event = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Event_Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Event_Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Event_Time = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
-                    categoryId = table.Column<int>(type: "int", nullable: false)
+                    Event_Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Create_At = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
+                    Ticket_Amount = table.Column<int>(type: "int", nullable: false),
+                    CategoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Events", x => x.Id_event);
                     table.ForeignKey(
-                        name: "FK_Events_Categories_categoryId",
-                        column: x => x.categoryId,
-                        principalTable: "Categories",
+                        name: "FK_Events_Category_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Category",
                         principalColumn: "Id_Category",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -50,34 +51,31 @@ namespace ModelBilletterSystem.Migrations
                 name: "Tickets",
                 columns: table => new
                 {
-                    Id_Ticket = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Ticket_Amount = table.Column<int>(type: "int", nullable: false),
+                    Id_Ticket = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Ticket_Price = table.Column<int>(type: "int", nullable: false),
-                    Ability = table.Column<bool>(type: "bit", nullable: false),
                     is_used = table.Column<bool>(type: "bit", nullable: false),
-                    eventId = table.Column<int>(type: "int", nullable: false)
+                    EventId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tickets", x => x.Id_Ticket);
                     table.ForeignKey(
-                        name: "FK_Tickets_Events_eventId",
-                        column: x => x.eventId,
+                        name: "FK_Tickets_Events_EventId",
+                        column: x => x.EventId,
                         principalTable: "Events",
                         principalColumn: "Id_event",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Events_categoryId",
+                name: "IX_Events_CategoryId",
                 table: "Events",
-                column: "categoryId");
+                column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tickets_eventId",
+                name: "IX_Tickets_EventId",
                 table: "Tickets",
-                column: "eventId");
+                column: "EventId");
         }
 
         /// <inheritdoc />
@@ -90,7 +88,7 @@ namespace ModelBilletterSystem.Migrations
                 name: "Events");
 
             migrationBuilder.DropTable(
-                name: "Categories");
+                name: "Category");
         }
     }
 }

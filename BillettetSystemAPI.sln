@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BillettetSystemAPI", "Bille
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelBilletterSystem", "ModelBilletterSystem\ModelBilletterSystem.csproj", "{01381106-1EA6-4F2B-AC48-4ED40BFCE362}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelLibrary", "..\ModelLibrary\ModelLibrary.csproj", "{72F7A1C2-4519-43F4-BF22-88190157A8D6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{01381106-1EA6-4F2B-AC48-4ED40BFCE362}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{01381106-1EA6-4F2B-AC48-4ED40BFCE362}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{01381106-1EA6-4F2B-AC48-4ED40BFCE362}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72F7A1C2-4519-43F4-BF22-88190157A8D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72F7A1C2-4519-43F4-BF22-88190157A8D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72F7A1C2-4519-43F4-BF22-88190157A8D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72F7A1C2-4519-43F4-BF22-88190157A8D6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
