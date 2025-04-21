@@ -24,10 +24,21 @@ namespace BillettetSystemAPI.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<List<Category>> GetAllCategories()
+        public async Task<List<Category>> GetAllCategories()
         {
-            throw new NotImplementedException();
+
+            
+            var categories = await _context.Category.ToListAsync();
+
+            if (!categories.Any())
+            {
+                throw new Exception("No categories found.");
+            }
+
+            return categories;
         }
+
+        
 
         public Task<Category> GetCategoryById(int Id_Category)
         {

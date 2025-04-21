@@ -38,38 +38,19 @@ namespace BillettetSystemAPI.Controllers
             return Ok(result);
         }
 
-        [HttpPost("createTicket")]
-        public async Task<IActionResult> CreateTicket([FromBody] CreateTicket ticketModel)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var createdTicket = await _ticketRepository.CreateTicket(
-                ticketModel.Ticket_Price,
-                ticketModel.is_used,
-                ticketModel.EventId
-
-
-            );
-
-            return Ok(createdTicket);
-        }
 
         [HttpPost("buyTicket")]
-        public async Task<Ticket> BuyTicket([FromBody] buyTicket ticketModel)
+        public async Task<IActionResult> BuyTicket([FromBody] buyTicketRequest request)
         {
-            var ticket = await _context.Tickets
-                .FirstOrDefaultAsync(t => t.Ticket_Price == t.Ticket_Price && t.is_used == false);
-
-            if (ticket == null)
+            try
             {
-                throw new InvalidOperationException("Ticket not available.");
+                var result = await _ticketRepository.BuyTicket(request.EventId, request.ticketIntotal);
+                return Ok(result);
             }
-
-            ticket.is_used = true;
-            await _context.SaveChangesAsync();
-
-            return ticket;
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpPut("updateTicket")]
@@ -78,15 +59,40 @@ namespace BillettetSystemAPI.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var updatedTicket = await _ticketRepository.UpdateTicket(
+            var updateTicket = await _ticketRepository.UpdateTicket(
                 ticketModel.Id_Ticket,
-                ticketModel.Ticket_Price,
                 ticketModel.is_used,
                 ticketModel.EventId
+                );
+        
+            return Ok(UpdateTicket);
+        }
 
-            );
+        [HttpPut("MarkAsUsed")]
+        public async Task<IActionResult> MarkAsUsed([FromQuery] Guid id_ticket)
+        {
+            var ticket = await _context.Tickets.FirstOrDefaultAsync(t => t.Id_Ticket == id_ticket);
 
-            return Ok(updatedTicket);
+            if (ticket == null)
+                return NotFound("Ticket not found.");
+
+            if (ticket.is_used)
+                return BadRequest("Ticket already used.");
+
+            ticket.is_used = true;
+            _context.Tickets.Update(ticket);
+            await _context.SaveChangesAsync();
+
+            return Ok("Ticket marked as used.");
+        }
+
+
+        [HttpGet("TicketPDF")]
+        public async Task<IActionResult> TicketPDF(Guid id_ticket)
+        {
+            return await _ticketRepository.TicketPDF(id_ticket);
+          
+
         }
 
         [HttpDelete("deleteEvent/{id}")]

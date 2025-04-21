@@ -59,7 +59,7 @@ namespace BillettetSystemAPI.Controllers
 
             var updatedEvent = await _categoryRepository.UpdateCategory(
                  categoryModel.Id_Category,
-                categoryModel.CategoryName
+                 categoryModel.CategoryName
             );
 
             return Ok(updatedEvent);

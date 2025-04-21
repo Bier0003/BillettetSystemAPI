@@ -10,8 +10,8 @@ namespace ModelBilletterSystem
     
         [Key]
         public Guid Id_Ticket { get; set; } = Guid.NewGuid();
-        public decimal Ticket_Price { get; set; }
         public bool is_used { get; set; } = false;
+
         [ForeignKey("Id_event")]
         public int EventId { get; set; }
         [JsonIgnore]

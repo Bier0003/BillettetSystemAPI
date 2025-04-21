@@ -1,4 +1,6 @@
-﻿using ModelBilletterSystem;
+﻿using Microsoft.AspNetCore.Mvc;
+using ModelBilletterSystem;
+using ModelLibrary;
 namespace BillettetSystemAPI.Interfaces
 
 {
@@ -6,9 +8,11 @@ namespace BillettetSystemAPI.Interfaces
     {
         Task<List<Ticket>> GetAllTickets();
         Task<Ticket> GetTicketById(Guid Id_ticket);
-        Task<Ticket> CreateTicket(decimal ticket_price, bool is_used, int eventId);
-        Task<Ticket> UpdateTicket(Guid Id_ticket, decimal ticket_price, bool is_used, int eventId);
+        Task<Ticket> UpdateTicket(Guid Id_ticket, bool is_used, int eventId);
         Task<bool> RemoveTicket(Guid Id_ticket);
-        Task BuyTicket(decimal ticket_Price,bool is_used);
+        Task<List<buyTicketResponse>> BuyTicket(int eventId, int ticketIntotal);
+        Task<IActionResult> MarkAsUsed(Guid id_ticket);
+        Task<IActionResult> TicketPDF(Guid id_ticket);
+       
     }
 }
